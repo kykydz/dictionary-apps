@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="446.0" prefWidth="509.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.task1dictionary.controller.Main">
+   <children>
+      <TextField fx:id="textInputEngWord" layoutX="191.0" layoutY="79.0" />
+      <TextField fx:id="textInputInaWord" layoutX="191.0" layoutY="123.0" />
+      <Button fx:id="btnFindWord" layoutX="369.0" layoutY="79.0" mnemonicParsing="false" onAction="#onBtnFindWordClick" prefHeight="26.0" prefWidth="115.0" text="Cari" />
+      <Button fx:id="btnSaveWord" layoutX="369.0" layoutY="123.0" mnemonicParsing="false" onAction="#onBtnSaveWordClick" text="Simpan Data Baru" />
+      <Label fx:id="labelInputEngWord" layoutX="28.0" layoutY="83.0" text="Masukkan Kata Inggris" />
+      <Label fx:id="labelInputInaWord" layoutX="28.0" layoutY="123.0" text="Masukkan Kata Indonesia" />
+      <TableView fx:id="tableViewDictionary" layoutX="26.0" layoutY="197.0" prefHeight="201.0" prefWidth="456.0">
+         <columns>
+            <TableColumn fx:id="tableColEnglish" prefWidth="229.0" text="Inggris" />
+            <TableColumn fx:id="tableColIndonesia" prefWidth="226.0" text="Indonesia" />
+         </columns>
+      </TableView>
+      <Button fx:id="btnDeleteWord" layoutX="26.0" layoutY="405.0" mnemonicParsing="false" onAction="#onBtnDeleteWordClick" text="Hapus" />
+      <Button fx:id="btnExit" layoutX="432.0" layoutY="405.0" mnemonicParsing="false" onAction="#onBtnExitClick" text="Keluar" />
+      <Button fx:id="btnShowDict" layoutX="27.0" layoutY="160.0" mnemonicParsing="false" onAction="#onBtnShowDictClick" text="Lihat Daftar" />
+      <Pane layoutX="27.0" layoutY="16.0" prefHeight="48.0" prefWidth="456.0" style="-fx-background-color: #e6e6e6;">
+         <children>
+            <RadioButton fx:id="rbDictModeInaEng" layoutX="117.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Indonesia - Inggris">
+               <toggleGroup>
+                  <ToggleGroup fx:id="dictModeRBGroup" />
+               </toggleGroup>
+            </RadioButton>
+            <Label fx:id="labelDictionaryMode" layoutX="14.0" layoutY="14.0" text="Mode Kamus" />
+            <RadioButton fx:id="rbDictModeEngIna" layoutX="272.0" layoutY="14.0" mnemonicParsing="false" text="Inggris - Indonesia" toggleGroup="$dictModeRBGroup" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class WindowLoader {
 
@@ -26,6 +28,11 @@ public class WindowLoader {
         stage.setWidth(prefWidth);
         stage.setHeight(prefHeight);
         stage.setScene(scene);
+        stage.setTitle(String.valueOf(ResourceBundle.getBundle(
+                "locale.en",
+                Locale.of("en")
+        )));
+
         stage.show();
     }
 }

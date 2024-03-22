@@ -15,6 +15,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/app/task1dictionary/view/Main.fxml"));
+        // inject primary stage
+//        org.app.task1dictionary.controller.Main mainController = fxmlLoader.getController();
+//        mainController.setPrimaryStage(primaryStage);
 
         WindowLoader windowLoader = new WindowLoader();
         windowLoader.load(fxmlLoader, primaryStage);

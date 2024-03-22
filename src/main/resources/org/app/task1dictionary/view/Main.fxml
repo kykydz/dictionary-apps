@@ -35,7 +35,7 @@
                </toggleGroup>
             </RadioButton>
             <Label fx:id="labelDictionaryMode" layoutX="14.0" layoutY="14.0" text="Mode Kamus" />
-            <RadioButton fx:id="rbDictModeEngIna" layoutX="272.0" layoutY="14.0" mnemonicParsing="false" text="Inggris - Indonesia" toggleGroup="$dictModeRBGroup" />
+            <RadioButton fx:id="rbDictModeEngIna" layoutX="272.0" layoutY="14.0" mnemonicParsing="false" text="English - Indonesia" toggleGroup="$dictModeRBGroup" />
          </children>
       </Pane>
    </children>

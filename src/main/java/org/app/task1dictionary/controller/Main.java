@@ -7,7 +7,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.app.task1dictionary.model.Dictionary;
+import org.app.task1dictionary.utils.ClassExtractor;
 import org.app.task1dictionary.utils.LanguageListener;
 
 import java.net.URL;
@@ -16,6 +18,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class Main implements Initializable {
+    private Stage primaryStage;
+    @FXML
+    public TableColumn<String, String> tableColEnglish, tableColIndonesia;
     @FXML
     protected Parent root;
     // Declare component fields
@@ -59,11 +64,19 @@ public class Main implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         componentLists = initializeControls(root);
 
-        languageListener = new LanguageListener(dictModeRBGroup);
+//        primaryStage = (Stage) componentLists.getFirst().getScene().getWindow();
+
+        languageListener = new LanguageListener(dictModeRBGroup, componentLists,primaryStage);
+        languageListener.defaultLanguageMode();
         dictModeRBGroup.selectedToggleProperty().addListener(this::toggleChangeListener);
     }
 
     public List<Node> initializeControls(Parent root) {
-        return new ArrayList<>(root.getChildrenUnmodifiable());
+        ClassExtractor classExtractor = new ClassExtractor();
+        return classExtractor.extractControls(new ArrayList<>(root.getChildrenUnmodifiable()));
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }

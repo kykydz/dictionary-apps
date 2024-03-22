@@ -1,16 +1,16 @@
 package org.app.task1dictionary.utils;
 
+import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import org.app.task1dictionary.Main;
 import org.app.task1dictionary.view.Components;
 
 import java.lang.reflect.Field;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class LanguageListener {
-    public RadioButton rbDictModeInaEng, rbDictModeEngIna;
+public class LanguageListener extends Main {
+
     private final ToggleGroup dictModeRBGroup;
 
     public enum Language {
@@ -28,11 +28,10 @@ public class LanguageListener {
         }
 
         public ResourceBundle getLocalizedString() {
-            ResourceBundle resources = ResourceBundle.getBundle(
-                    "resources",
+            return ResourceBundle.getBundle(
+                    "locale." + this.name().toLowerCase(),
                     Locale.forLanguageTag(this.name().toLowerCase())
             );
-            return resources;
         }
     }
 
@@ -40,9 +39,9 @@ public class LanguageListener {
         this.dictModeRBGroup = dictModeRBGroup;
     }
 
-    private Language currentLanguage = Language.EN;
+    private Language currentLanguage;
 
-    public void handleLanguageChange() {
+    public void handleLanguageChange(List<Node> componentLists) {
         RadioButton selectedButton = (RadioButton) dictModeRBGroup.getSelectedToggle();
         if (selectedButton != null) {
             String selectedMode = selectedButton.getText();
@@ -50,12 +49,38 @@ public class LanguageListener {
                     Language.EN : Language.ID;
         }
 
-        updateUILanguageChange(currentLanguage);
+        updateUILanguageChange(currentLanguage, componentLists);
     }
 
-    private void updateUILanguageChange(Language currentLanguage) {
-        Components components = new Components();
-        setTextForAllComponents(components, currentLanguage.getLocalizedString());
+    private void updateUILanguageChange(Language currentLanguage, List<Node> componentLists) {
+        setTextForAllComponent(componentLists, currentLanguage.getLocalizedString());
+    }
+
+    public void setTextForAllComponent(List<Node> components, ResourceBundle resourceBundle) {
+        for (Field field : components.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String fieldName = field.getName();
+
+            try {
+                System.out.println("Field Name: " + fieldName);
+                String text = resourceBundle.getString(fieldName + ".text");
+
+                Object control = field.get(components);
+                if (field.getType() == Label.class) {
+                    ((Label) field.get(components)).setText(text);
+                } else if (field.getType() == Button.class) {
+                    ((Button) field.get(components)).setText(text);
+                } else if (field.getType() == RadioButton.class) {
+                    ((RadioButton) field.get(components)).setText(text);
+                } else if (field.getType() == TextField.class) {
+                    ((TextField) field.get(components)).setPromptText(text);
+                }
+            } catch (MissingResourceException e) {
+                System.out.println("Warning: Key '" + fieldName + "' not found in resource bundle.");
+            } catch (IllegalAccessException e) {
+                System.out.println("Warning: Could not access field: " + fieldName);
+            }
+        }
     }
 
     public void setTextForAllComponents(Components components, ResourceBundle resourceBundle) {
@@ -64,8 +89,10 @@ public class LanguageListener {
             String fieldName = field.getName();
 
             try {
-                String text = resourceBundle.getString(fieldName);
+                System.out.println("Field Name: " + fieldName);
+                String text = resourceBundle.getString(fieldName + ".text");
 
+                Object control = field.get(components);
                 if (field.getType() == Label.class) {
                     ((Label) field.get(components)).setText(text);
                 } else if (field.getType() == Button.class) {

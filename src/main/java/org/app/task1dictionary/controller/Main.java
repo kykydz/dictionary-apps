@@ -1,17 +1,40 @@
 package org.app.task1dictionary.controller;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import org.app.task1dictionary.model.Dictionary;
 import org.app.task1dictionary.utils.LanguageListener;
-import org.app.task1dictionary.view.Components;
 
-public class Main extends Components{
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class Main implements Initializable {
+    @FXML
+    protected Parent root;
+    // Declare component fields
+    @FXML
+    public TextField textInputEngWord, textInputInaWord;
+    @FXML
+    public Button btnFindWord, btnSaveWord, btnShowDict, btnDeleteWord, btnExit;
+    @FXML
+    public RadioButton rbDictModeInaEng, rbDictModeEngIna;
+    @FXML
+    public TableView<Dictionary> tableViewDictionary;
+    @FXML
+    public ToggleGroup dictModeRBGroup;
+    @FXML
+    public Label labelDictionaryMode, labelInputEngWord, labelInputInaWord;
+
+    public List<Node> componentLists;
 
     private LanguageListener languageListener;
-
-    public void initialize() {
-        LanguageListener languageListener = new LanguageListener(dictModeRBGroup);
-        dictModeRBGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> languageListener.handleLanguageChange());
-    }
 
     public void onBtnFindWordClick(ActionEvent actionEvent) {
     }
@@ -26,5 +49,21 @@ public class Main extends Components{
     }
 
     public void onBtnShowDictClick(ActionEvent actionEvent) {
+    }
+
+    public void toggleChangeListener(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+        languageListener.handleLanguageChange(componentLists);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        componentLists = initializeControls(root);
+
+        languageListener = new LanguageListener(dictModeRBGroup);
+        dictModeRBGroup.selectedToggleProperty().addListener(this::toggleChangeListener);
+    }
+
+    public List<Node> initializeControls(Parent root) {
+        return new ArrayList<>(root.getChildrenUnmodifiable());
     }
 }

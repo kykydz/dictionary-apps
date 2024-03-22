@@ -5,7 +5,7 @@ module org.app.task1dictionary {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
 
-    opens org.app.task1dictionary to javafx.fxml;
+    opens org.app.task1dictionary.controller to javafx.fxml;
     exports org.app.task1dictionary;
     exports org.app.task1dictionary.model;
     exports org.app.task1dictionary.controller;

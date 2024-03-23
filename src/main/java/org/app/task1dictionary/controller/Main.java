@@ -1,6 +1,9 @@
 package org.app.task1dictionary.controller;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +23,8 @@ import java.util.ResourceBundle;
 public class Main implements Initializable {
     private Stage primaryStage;
     @FXML
-    public TableColumn<String, String> tableColEnglish, tableColIndonesia;
+    public TableColumn<Dictionary, String> tableColEnglish, tableColIndonesia;
+
     @FXML
     protected Parent root;
     // Declare component fields
@@ -67,6 +71,8 @@ public class Main implements Initializable {
         languageListener = new LanguageListener(dictModeRBGroup, componentLists);
         languageListener.defaultLanguageMode();
         dictModeRBGroup.selectedToggleProperty().addListener(this::toggleChangeListener);
+
+        initializeTable();
     }
 
     public List<Node> initializeControls(Parent root) {
@@ -76,5 +82,17 @@ public class Main implements Initializable {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    private ObservableList<Dictionary> dictionaries;
+    private void initializeTable() {
+        dictionaries = FXCollections.observableArrayList();
+        tableViewDictionary.setItems(dictionaries);
+
+        tableColEnglish.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEnglish()));
+        tableColIndonesia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIndonesian()));
+
+        // populate initial dictionary and show
+        tableViewDictionary.setItems(Dictionary.getDictionary());
     }
 }

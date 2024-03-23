@@ -13,7 +13,7 @@ import java.util.*;
 public class LanguageListener extends Main {
 
     private final ToggleGroup dictModeRBGroup;
-    private final Stage primaryStage;
+    private Stage primaryStage;
 
     List<Node> componentLists;
 
@@ -39,10 +39,9 @@ public class LanguageListener extends Main {
         }
     }
 
-    public LanguageListener (ToggleGroup dictModeRBGroup, List<Node> componentLists, Stage primaryStage) {
+    public LanguageListener (ToggleGroup dictModeRBGroup, List<Node> componentLists) {
         this.dictModeRBGroup = dictModeRBGroup;
         this.componentLists = componentLists;
-        this.primaryStage = primaryStage;
     }
 
     private Language currentLanguage = Language.ID;
@@ -54,6 +53,7 @@ public class LanguageListener extends Main {
             currentLanguage = selectedMode.equals(Language.EN.getFullMode()) ?
                     Language.EN : Language.ID;
         }
+        primaryStage = (Stage) componentLists.getFirst().getScene().getWindow();
 
         updateUILanguageChange(currentLanguage, componentLists);
     }
@@ -68,7 +68,9 @@ public class LanguageListener extends Main {
 
     public void setTextForAllComponent(List<Node> components, ResourceBundle resourceBundle) {
         // set for title of window
-        primaryStage.setTitle(resourceBundle.getString("stage.title"));
+        if (primaryStage != null) {
+            primaryStage.setTitle(resourceBundle.getString("stage.title"));
+        }
 
         for (Node node : components) {
             try {

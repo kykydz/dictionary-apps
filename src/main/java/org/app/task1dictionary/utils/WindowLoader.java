@@ -28,10 +28,13 @@ public class WindowLoader {
         stage.setWidth(prefWidth);
         stage.setHeight(prefHeight);
         stage.setScene(scene);
-        stage.setTitle(String.valueOf(ResourceBundle.getBundle(
+
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 "locale.en",
-                Locale.of("en")
-        )));
+                Locale.forLanguageTag("en")
+        );
+        String windowTitle = resourceBundle.getString("stage.title");
+        stage.setTitle(windowTitle);
 
         stage.show();
     }

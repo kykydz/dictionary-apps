@@ -64,9 +64,7 @@ public class Main implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         componentLists = initializeControls(root);
 
-//        primaryStage = (Stage) componentLists.getFirst().getScene().getWindow();
-
-        languageListener = new LanguageListener(dictModeRBGroup, componentLists,primaryStage);
+        languageListener = new LanguageListener(dictModeRBGroup, componentLists);
         languageListener.defaultLanguageMode();
         dictModeRBGroup.selectedToggleProperty().addListener(this::toggleChangeListener);
     }

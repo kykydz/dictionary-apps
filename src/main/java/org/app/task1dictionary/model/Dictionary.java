@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Objects;
 
 public class Dictionary {
     private static Hashtable<String, String> dictionary;
@@ -31,11 +33,29 @@ public class Dictionary {
         return dictionary.get(enWord);
     }
 
-    public String getEnWord(String idWord) {
+    public String getEnWordFromId(String idWord) {
         for (String englishWord : dictionary.keySet()) {
             if (dictionary.get(englishWord).equals(idWord)) {
                 return englishWord;
             }
+        }
+        return null;
+    }
+
+    public Dictionary getRecord(String keyWord) {
+        Dictionary foundDictRecord;
+        String key = null;
+        String value = null;
+        for (Map.Entry<String, String> entry : dictionary.entrySet()) {
+            key = entry.getKey();
+            if (Objects.equals(key, keyWord)) {
+                value = entry.getValue();
+            }
+            break;
+        }
+        if (key != null && value != null) {
+            foundDictRecord = new Dictionary(key, value);
+            return foundDictRecord;
         }
         return null;
     }

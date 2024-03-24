@@ -46,12 +46,45 @@ public class Main implements Initializable {
     private LanguageListener languageListener;
 
     public void onBtnFindWordClick(ActionEvent actionEvent) {
+        String langMode = this.GetSelectedDictionaryMode();
+        String word;
+        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
+        Dictionary foundRecord;
+        if (langMode.equals("en")) {
+            word = GetInputEnWord();
+            foundRecord = currentDictionary.getRecord(word);
+        } else {
+            word = GetInputEnWord();
+            currentDictionary.getEnWord(word);
+            foundRecord = currentDictionary.getRecord(word);
+        }
+        ObservableList<Dictionary> currentDictionaries = FXCollections.observableArrayList();
+        tableViewDictionary.setItems(currentDictionaries);
     }
 
     public void onBtnSaveWordClick(ActionEvent actionEvent) {
+        String enWordInput = this.GetInputEnWord();
+        String idWordInput = this.GetInputEnWord();
+        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
+        currentDictionary.addWord(enWordInput, idWordInput);
+        ObservableList<Dictionary> newDictionaries = FXCollections.observableArrayList();
+        tableViewDictionary.setItems(newDictionaries);
     }
 
     public void onBtnDeleteWordClick(ActionEvent actionEvent) {
+        String langMode = GetSelectedDictionaryMode();
+        String word;
+        String foundWord;
+        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
+        if (langMode.equals("en")) {
+            word = GetInputEnWord();
+            foundWord = currentDictionary.getIDWord(word);
+        } else {
+            word = GetInputEnWord();
+            foundWord = currentDictionary.getEnWord(word);
+        }
+        ObservableList<Dictionary> currentDictionaries = FXCollections.observableArrayList();
+        tableViewDictionary.setItems(currentDictionaries);
     }
 
     public void onBtnExitClick(ActionEvent actionEvent) {
@@ -94,5 +127,24 @@ public class Main implements Initializable {
 
         // populate initial dictionary and show
         tableViewDictionary.setItems(Dictionary.getDictionary());
+    }
+
+    private String GetInputEnWord() {
+        return textInputEngWord.getText();
+    }
+
+    private String GetInputIdWord() {
+        return textInputInaWord.getText();
+    }
+
+    private String GetSelectedDictionaryMode() {
+        String dictionaryMode = ((RadioButton) dictModeRBGroup.getSelectedToggle()).getText();
+        LanguageListener.Language langEn = LanguageListener.Language.EN;
+        LanguageListener.Language langId = LanguageListener.Language.ID;
+        if (dictionaryMode.equals(langEn.getFullMode())) {
+            return LanguageListener.Language.EN.name();
+        } else {
+            return LanguageListener.Language.ID.name();
+        }
     }
 }

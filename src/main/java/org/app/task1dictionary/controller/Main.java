@@ -32,7 +32,7 @@ public class Main implements Initializable {
     @FXML
     public TextField textInputEngWord, textInputInaWord;
     @FXML
-    public Button btnFindWord, btnSaveWord, btnShowDict, btnDeleteWord, btnExit;
+    public Button btnFindWord, btnSaveWord, btnCreateNewRecord, btnShowDict, btnDeleteWord, btnExit;
     @FXML
     public RadioButton rbDictModeInaEng, rbDictModeEngIna;
     @FXML
@@ -65,7 +65,7 @@ public class Main implements Initializable {
             tableViewDictionary.setItems(currentDictionaries);
         } else {
             // Find the word based the filled / dictionary mode
-            if (langMode.equals("en") && (enWord == null || enWord.isEmpty())) {
+            if (langMode.equals("en") && (enWord != null || !enWord.isEmpty())) {
                 word = enWord;
                 foundRecord = currentDictionary.getRecord(word);
             } else {
@@ -75,29 +75,58 @@ public class Main implements Initializable {
             }
 
             // Populate tableview with current found item (will null if not found)
-            currentDictionaries.add(foundRecord);
-            tableViewDictionary.setItems(currentDictionaries);
+            ObservableList<Dictionary> foundWords = FXCollections.observableArrayList();
+            foundWords.add(foundRecord);
+            tableViewDictionary.setItems(foundWords);
         }
-
-
     }
 
     public void onBtnSaveWordClick(ActionEvent actionEvent) {
-        String enWordInput = this.GetInputEnWord();
-        String idWordInput = this.GetInputEnWord();
-        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
-        currentDictionary.addWord(enWordInput, idWordInput);
-        ObservableList<Dictionary> newDictionaries = FXCollections.observableArrayList();
-        tableViewDictionary.setItems(newDictionaries);
+        String enWord = GetInputEnWord();
+        String idWord = GetInputIdWord();
+        if ((enWord == null || enWord.isEmpty())  && (idWord == null || idWord.isEmpty())) {
+            // do nothing
+        } else {
+            // fetch current dictionary data
+            Dictionary currentDictionary = new Dictionary(null, null);
+            ObservableList<Dictionary> currentDictionaryRecord = FXCollections.observableArrayList();
+
+            // default empty value
+            currentDictionary.addWord(enWord, idWord);
+
+            // populate using new dictionary
+            ObservableList<Dictionary> newDictionariesRecord = Dictionary.getDictionary();
+            tableViewDictionary.setItems(newDictionariesRecord);
+        }
     }
 
     public void onBtnDeleteWordClick(ActionEvent actionEvent) {
+        String dictionaryMode = ((RadioButton) dictModeRBGroup.getSelectedToggle()).getText();
+        LanguageListener.Language langEn = LanguageListener.Language.EN;
+
+        // fetch current dictionary data
+        Dictionary currentDictionary = new Dictionary(null, null);
+        ObservableList<Dictionary> currentDictionaryRecord = FXCollections.observableArrayList();
+
+        // get key word which use English word
+        String word;
+        if (dictionaryMode.equals(langEn.getFullMode())) {
+            word = GetInputEnWord();
+        } else {
+            word = GetInputIdWord();
+            word = currentDictionary.getEnWordFromId(word);
+        }
+
+        currentDictionary.removeWord(word);
+        tableViewDictionary.setItems(Dictionary.getDictionary());
     }
 
     public void onBtnExitClick(ActionEvent actionEvent) {
     }
 
     public void onBtnShowDictClick(ActionEvent actionEvent) {
+        ObservableList<Dictionary> newDictionariesRecord = Dictionary.getDictionary();
+        tableViewDictionary.setItems(newDictionariesRecord);
     }
 
     public void toggleChangeListener(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
@@ -153,5 +182,12 @@ public class Main implements Initializable {
         } else {
             return LanguageListener.Language.ID.name();
         }
+    }
+
+    public void onBtnCreateNewRecord(ActionEvent actionEvent) {
+        textInputInaWord.setDisable(false);
+        textInputEngWord.setDisable(false);
+        btnFindWord.setDisable(true);
+        btnSaveWord.setDisable(false);
     }
 }

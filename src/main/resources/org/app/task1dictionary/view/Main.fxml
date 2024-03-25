@@ -15,7 +15,7 @@
       <TextField fx:id="textInputEngWord" layoutX="191.0" layoutY="79.0" />
       <TextField fx:id="textInputInaWord" layoutX="191.0" layoutY="123.0" />
       <Button fx:id="btnFindWord" layoutX="369.0" layoutY="79.0" mnemonicParsing="false" onAction="#onBtnFindWordClick" prefHeight="26.0" prefWidth="115.0" text="Cari" />
-      <Button fx:id="btnSaveWord" layoutX="369.0" layoutY="123.0" mnemonicParsing="false" onAction="#onBtnSaveWordClick" text="Simpan Data Baru" />
+      <Button fx:id="btnSaveWord" disable="true" layoutX="369.0" layoutY="160.0" mnemonicParsing="false" onAction="#onBtnSaveWordClick" text="Simpan Data Baru" />
       <Label fx:id="labelInputEngWord" layoutX="28.0" layoutY="83.0" text="Masukkan Kata Inggris" />
       <Label fx:id="labelInputInaWord" layoutX="28.0" layoutY="123.0" text="Masukkan Kata Indonesia" />
       <TableView fx:id="tableViewDictionary" layoutX="26.0" layoutY="197.0" prefHeight="201.0" prefWidth="456.0">
@@ -38,5 +38,6 @@
             <RadioButton fx:id="rbDictModeEngIna" layoutX="272.0" layoutY="14.0" mnemonicParsing="false" text="English - Indonesia" toggleGroup="$dictModeRBGroup" />
          </children>
       </Pane>
+      <Button fx:id="btnCreateNewRecord" layoutX="369.0" layoutY="123.0" mnemonicParsing="false" onAction="#onBtnCreateNewRecord" text="Buat Data Baru" />
    </children>
 </AnchorPane>

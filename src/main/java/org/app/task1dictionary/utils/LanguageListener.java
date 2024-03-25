@@ -13,6 +13,9 @@ import java.util.*;
 public class LanguageListener extends Main {
 
     private final ToggleGroup dictModeRBGroup;
+
+    @FXML
+    private TextField textInputEngWord, textInputInaWord;
     private Stage primaryStage;
 
     List<Node> componentLists;
@@ -39,9 +42,12 @@ public class LanguageListener extends Main {
         }
     }
 
-    public LanguageListener (ToggleGroup dictModeRBGroup, List<Node> componentLists) {
+    public LanguageListener (ToggleGroup dictModeRBGroup, List<Node> componentLists, TextField textInputEngWord, TextField textInputInaWord) {
+        super();
         this.dictModeRBGroup = dictModeRBGroup;
         this.componentLists = componentLists;
+        this.textInputEngWord = textInputEngWord;
+        this.textInputInaWord = textInputInaWord;
     }
 
     private Language currentLanguage = Language.ID;
@@ -56,10 +62,25 @@ public class LanguageListener extends Main {
         primaryStage = (Stage) componentLists.getFirst().getScene().getWindow();
 
         updateUILanguageChange(currentLanguage, componentLists);
+        updateControlChange();
     }
 
     public void defaultLanguageMode() {
         updateUILanguageChange(currentLanguage, componentLists);
+        updateControlChange();
+    }
+
+    public void updateControlChange() {
+        String dictionaryMode = ((RadioButton) dictModeRBGroup.getSelectedToggle()).getText();
+        LanguageListener.Language langEn = LanguageListener.Language.EN;
+        LanguageListener.Language langId = LanguageListener.Language.ID;
+        if (dictionaryMode.equals(langEn.getFullMode())) {
+            textInputInaWord.setDisable(true);
+            textInputEngWord.setDisable(false);
+        } else {
+            textInputInaWord.setDisable(false);
+            textInputEngWord.setDisable(true);
+        }
     }
 
     private void updateUILanguageChange(Language currentLanguage, List<Node> componentLists) {

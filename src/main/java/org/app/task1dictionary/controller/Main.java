@@ -17,6 +17,7 @@ import org.app.task1dictionary.utils.LanguageListener;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -46,20 +47,39 @@ public class Main implements Initializable {
     private LanguageListener languageListener;
 
     public void onBtnFindWordClick(ActionEvent actionEvent) {
-        String langMode = this.GetSelectedDictionaryMode();
+        String langMode = GetSelectedDictionaryMode().toLowerCase();
         String word;
-        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
         Dictionary foundRecord;
-        if (langMode.equals("en")) {
-            word = GetInputEnWord();
-            foundRecord = currentDictionary.getRecord(word);
-        } else {
-            word = GetInputEnWord();
-            currentDictionary.getEnWord(word);
-            foundRecord = currentDictionary.getRecord(word);
-        }
+        String enWord = GetInputEnWord();
+        String idWord = GetInputIdWord();
+
+        // fetch current dictionary data
+        Dictionary currentDictionary = new Dictionary(null, null);
         ObservableList<Dictionary> currentDictionaries = FXCollections.observableArrayList();
-        tableViewDictionary.setItems(currentDictionaries);
+
+        // default empty value
+        currentDictionaries = currentDictionary.showDictionary(currentDictionaries);
+
+        // validation
+        if ((enWord == null || enWord.isEmpty())  && (idWord == null || idWord.isEmpty())) {
+            tableViewDictionary.setItems(currentDictionaries);
+        } else {
+            // Find the word based the filled / dictionary mode
+            if (langMode.equals("en") && (enWord == null || enWord.isEmpty())) {
+                word = enWord;
+                foundRecord = currentDictionary.getRecord(word);
+            } else {
+                word = idWord;
+                String enWordFromId = currentDictionary.getEnWordFromId(word);
+                foundRecord = currentDictionary.getRecord(enWordFromId);
+            }
+
+            // Populate tableview with current found item (will null if not found)
+            currentDictionaries.add(foundRecord);
+            tableViewDictionary.setItems(currentDictionaries);
+        }
+
+
     }
 
     public void onBtnSaveWordClick(ActionEvent actionEvent) {
@@ -72,19 +92,6 @@ public class Main implements Initializable {
     }
 
     public void onBtnDeleteWordClick(ActionEvent actionEvent) {
-        String langMode = GetSelectedDictionaryMode();
-        String word;
-        String foundWord;
-        Dictionary currentDictionary = (Dictionary) Dictionary.getDictionary();
-        if (langMode.equals("en")) {
-            word = GetInputEnWord();
-            foundWord = currentDictionary.getIDWord(word);
-        } else {
-            word = GetInputEnWord();
-            foundWord = currentDictionary.getEnWord(word);
-        }
-        ObservableList<Dictionary> currentDictionaries = FXCollections.observableArrayList();
-        tableViewDictionary.setItems(currentDictionaries);
     }
 
     public void onBtnExitClick(ActionEvent actionEvent) {
@@ -101,7 +108,7 @@ public class Main implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         componentLists = initializeControls(root);
 
-        languageListener = new LanguageListener(dictModeRBGroup, componentLists);
+        languageListener = new LanguageListener(dictModeRBGroup, componentLists, textInputEngWord, textInputInaWord);
         languageListener.defaultLanguageMode();
         dictModeRBGroup.selectedToggleProperty().addListener(this::toggleChangeListener);
 

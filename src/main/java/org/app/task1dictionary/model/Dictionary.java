@@ -15,6 +15,7 @@ public class Dictionary {
     public Dictionary(String english, String indonesian) {
         this.english = english;
         this.indonesian = indonesian;
+        defaultValue();
     }
 
     public String getEnglish() {
@@ -29,7 +30,7 @@ public class Dictionary {
         dictionary.put(enWord, idWord);
     }
 
-    public String getIDWord(String enWord) {
+    public String getIDWordFromEn(String enWord) {
         return dictionary.get(enWord);
     }
 
@@ -50,8 +51,8 @@ public class Dictionary {
             key = entry.getKey();
             if (Objects.equals(key, keyWord)) {
                 value = entry.getValue();
+                break;
             }
-            break;
         }
         if (key != null && value != null) {
             foundDictRecord = new Dictionary(key, value);
@@ -65,19 +66,20 @@ public class Dictionary {
     }
 
     public String findWord(String enWord) {
-        return dictionary.containsKey(enWord) ? getIDWord(enWord) : null;
+        return dictionary.containsKey(enWord) ? getIDWordFromEn(enWord) : null;
     }
 
-    private static Hashtable<String, String> defaultValue() {
-        dictionary = new Hashtable<>();
-        dictionary.put("ONE", "SATU");
-        dictionary.put("TWO", "DUA");
-        dictionary.put("THREE", "TIGA");
-        return dictionary;
+    public static void defaultValue() {
+        if (dictionary == null) {
+            dictionary = new Hashtable<>();
+            dictionary.put("ONE", "SATU");
+            dictionary.put("TWO", "DUA");
+            dictionary.put("THREE", "TIGA");
+        }
     }
 
     public static ObservableList<Dictionary> getDictionary() {
-        Hashtable<String, String> dictionary = defaultValue();
+        Hashtable<String, String> dictionary = getInitializedDictionary();
 
         // Populate the ObservableList with data from the Hashtable
         ObservableList<Dictionary> data = FXCollections.observableArrayList();
@@ -86,5 +88,16 @@ public class Dictionary {
             data.add(new Dictionary(english, indonesian));
         }
         return data;
+    }
+
+    public ObservableList<Dictionary> showDictionary(ObservableList<Dictionary> currentDictionaries) {
+        dictionary.forEach((key, value) -> currentDictionaries.add(new Dictionary(key, value)));
+        return currentDictionaries;
+    }
+
+    private static Hashtable<String, String> getInitializedDictionary() {
+        Dictionary instance = new Dictionary("", ""); // Dummy instance to ensure initialization
+        instance.defaultValue();
+        return dictionary;
     }
 }
